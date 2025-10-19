@@ -182,8 +182,26 @@
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             overflow: hidden;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInSlideUp 0.5s ease-out forwards;
         }
+        .menu-item-card.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .menu-item-card-content {
             padding: 20px;
         }
@@ -198,6 +216,78 @@
             font-size: 1.2rem;
             font-weight: bold;
             color: var(--primary-color);
+        }
+
+        /* Order Form Section */
+        #order-form {
+            padding: 80px 0;
+            background: var(--surface-color);
+        }
+        #order-form h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+        .order-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+        .order-items, .order-summary {
+            background: var(--background-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .order-item-details {
+            flex-grow: 1;
+        }
+        .order-item-details h4 {
+            margin: 0 0 5px 0;
+        }
+        .order-item-quantity input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 5px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+        }
+        .order-total {
+            text-align: right;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .place-order-btn {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
         }
 
         /* Footer */
@@ -257,6 +347,9 @@
             .mobile-toggle {
                 display: block;
             }
+            .order-container {
+                grid-template-columns: 1fr;
+            }
             .footer-container {
                 flex-direction: column;
                 text-align: center;
@@ -307,14 +400,14 @@
             <div class="menu-category">
                 <h3>Starters</h3>
                 <div class="menu-grid">
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="1" data-item-name="Chrome & Onion Rings" data-item-price="120">
                         <div class="menu-item-card-content">
                             <h4>Chrome & Onion Rings</h4>
                             <p>Crispy perfection made with sweet Vidalia onions (serves 2)</p>
                             <p class="price">฿120</p>
                         </div>
                     </div>
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="2" data-item-name="Loaded Fries" data-item-price="80">
                         <div class="menu-item-card-content">
                             <h4>Loaded Fries</h4>
                             <p>Choose your weapon - Cheese, Bacon, Chili, or go all in with "The Works" (cheese, bacon, chili, jalapenos)</p>
@@ -326,21 +419,21 @@
             <div class="menu-category">
                 <h3>The Classics</h3>
                 <div class="menu-grid">
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="3" data-item-name="The All-American" data-item-price="180">
                         <div class="menu-item-card-content">
                             <h4>The All-American</h4>
                             <p>A timeless masterpiece featuring a juicy all-beef patty, melted cheddar cheese, crisp lettuce, vine-ripened tomato, red onion, tangy pickles, and our signature "Chrome Sauce" on a toasted brioche bun</p>
-                            <p class="price">$180</p>
+                            <p class="price">฿180</p>
                         </div>
                     </div>
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="4" data-item-name="Cheeseburger" data-item-price="150">
                         <div class="menu-item-card-content">
                             <h4>Cheeseburger</h4>
                             <p>Simplicity done right. A juicy all-beef patty with melted American cheese on a toasted brioche bun. Customize it with your favorite toppings (additional cost)</p>
                             <p class="price">฿150</p>
                         </div>
                     </div>
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="5" data-item-name="The Baconator" data-item-price="250">
                         <div class="menu-item-card-content">
                             <h4>The Baconator</h4>
                             <p>For the truly burger-obsessed. A double stacked juicy all-beef patty extravaganza with crispy bacon, melted cheddar cheese, crisp lettuce, vine-ripened tomato, red onion, and tangy pickles, all on a toasted brioche bun</p>
@@ -352,21 +445,21 @@
             <div class="menu-category">
                 <h3>Beachcomber Specials</h3>
                 <div class="menu-grid">
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="6" data-item-name="Aloha Burger" data-item-price="200">
                         <div class="menu-item-card-content">
                             <h4>Aloha Burger</h4>
                             <p>Island vibes on a bun! This tropical treat features a juicy all-beef patty topped with grilled pineapple, melted Swiss cheese, crisp lettuce, tangy teriyaki sauce, and a creamy sriracha mayo on a toasted Hawaiian sweet roll</p>
                             <p class="price">฿200</p>
                         </div>
                     </div>
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="7" data-item-name="Cali Dreamin'" data-item-price="220">
                         <div class="menu-item-card-content">
                             <h4>Cali Dreamin'</h4>
                             <p>West coast vibes meet East coast deliciousness. A juicy all-beef patty topped with creamy avocado, melted pepper jack cheese, crisp lettuce, vine-ripened tomato, red onion, and a chipotle mayo on a toasted sesame seed bun</p>
-                            <p class="price">$220</p>
+                            <p class="price">฿220</p>
                         </div>
                     </div>
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="8" data-item-name="The Shrimp Daddy" data-item-price="200">
                         <div class="menu-item-card-content">
                             <h4>The Shrimp Daddy</h4>
                             <p>Feeling like something from the sea? A succulent jumbo shrimp patty with lettuce, tomato, remoulade sauce, and pico de gallo on a toasted brioche bun</p>
@@ -378,21 +471,21 @@
             <div class="menu-category">
                 <h3>Sides</h3>
                 <div class="menu-grid">
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="9" data-item-name="Seasoned Fries" data-item-price="50">
                         <div class="menu-item-card-content">
                             <h4>Seasoned Fries</h4>
                             <p>Crispy and golden, just the way they should be</p>
-                            <p class="price">$50</p>
+                            <p class="price">฿50</p>
                         </div>
                     </div>
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="10" data-item-name="Onion Rings" data-item-price="80">
                         <div class="menu-item-card-content">
                             <h4>Onion Rings</h4>
                             <p>These beauties are addictive</p>
-                            <p class="price">$80</p>
+                            <p class="price">฿80</p>
                         </div>
                     </div>
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="11" data-item-name="Creamy Coleslaw" data-item-price="40">
                         <div class="menu-item-card-content">
                             <h4>Creamy Coleslaw</h4>
                             <p>The perfect tangy counterpoint to your burger</p>
@@ -404,25 +497,61 @@
             <div class="menu-category">
                 <h3>Drinks</h3>
                 <div class="menu-grid">
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="12" data-item-name="Soft Drinks" data-item-price="30">
                         <div class="menu-item-card-content">
                             <h4>Soft Drinks</h4>
                             <p class="price">฿30</p>
                         </div>
                     </div>
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="13" data-item-name="Bottled Water" data-item-price="20">
                         <div class="menu-item-card-content">
                             <h4>Bottled Water</h4>
-                            <p class="price">$20</p>
+                            <p class="price">฿20</p>
                         </div>
                     </div>
-                    <div class="menu-item-card">
+                    <div class="menu-item-card" data-item-id="14" data-item-name="Milkshakes" data-item-price="80">
                         <div class="menu-item-card-content">
                             <h4>Milkshakes</h4>
                             <p>(Vanilla, Chocolate, Oreo)</p>
                             <p class="price">฿80</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="order-form">
+        <div class="container">
+            <h2>Place Your Order</h2>
+            <div class="order-container">
+                <div class="order-items">
+                    <h3>Your Order</h3>
+                    <div id="order-items-list">
+                        <!-- Items will be added here by JavaScript -->
+                    </div>
+                </div>
+                <div class="order-summary">
+                    <h3>Your Details</h3>
+                    <form id="customer-details-form">
+                        <div class="form-group">
+                            <label for="customer-name">Name</label>
+                            <input type="text" id="customer-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-phone">Phone Number</label>
+                            <input type="tel" id="customer-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-address">Address</label>
+                            <input type="text" id="customer-address" required>
+                        </div>
+                    </form>
+                    <h3>Order Summary</h3>
+                    <div class="order-total">
+                        Total: <span id="order-total-price">฿0</span>
+                    </div>
+                    <button class="place-order-btn">Place Order</button>
                 </div>
             </div>
         </div>
@@ -473,6 +602,92 @@
             document.body.classList.add('dark-mode');
             themeSwitch.checked = true;
         }
+
+        // Order form logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuItems = document.querySelectorAll('.menu-item-card');
+            const orderItemsList = document.getElementById('order-items-list');
+            const orderTotalPrice = document.getElementById('order-total-price');
+            const placeOrderBtn = document.querySelector('.place-order-btn');
+            const customerForm = document.getElementById('customer-details-form');
+
+            let currentOrder = {};
+
+            menuItems.forEach(item => {
+                const itemId = item.dataset.itemId;
+                const itemName = item.dataset.itemName;
+                const itemPrice = parseFloat(item.dataset.itemPrice.replace(/[^0-9.-]+/g,""));
+
+                const orderItemHTML = `
+                    <div class="order-item" data-item-id="${itemId}">
+                        <div class="order-item-details">
+                            <h4>${itemName}</h4>
+                            <p class="price">฿${itemPrice.toFixed(2)}</p>
+                        </div>
+                        <div class="order-item-quantity">
+                            <input type="number" value="0" min="0" class="quantity-input">
+                        </div>
+                    </div>
+                `;
+                orderItemsList.innerHTML += orderItemHTML;
+            });
+
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+
+            quantityInputs.forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const itemId = e.target.closest('.order-item').dataset.itemId;
+                    const quantity = parseInt(e.target.value);
+                    const itemPrice = parseFloat(document.querySelector(`.menu-item-card[data-item-id='${itemId}']`).dataset.itemPrice.replace(/[^0-9.-]+/g,""));
+
+                    if (quantity > 0) {
+                        currentOrder[itemId] = { quantity, itemPrice };
+                    } else {
+                        delete currentOrder[itemId];
+                    }
+                    updateTotal();
+                });
+            });
+
+            function updateTotal() {
+                let total = 0;
+                for (const itemId in currentOrder) {
+                    const item = currentOrder[itemId];
+                    total += item.quantity * item.itemPrice;
+                }
+                orderTotalPrice.textContent = `฿${total.toFixed(2)}`;
+            }
+
+            placeOrderBtn.addEventListener('click', () => {
+                if (customerForm.checkValidity() && Object.keys(currentOrder).length > 0) {
+                    alert('Thank you for your order! We will contact you shortly to confirm.');
+                    // Here you would typically send the order to a server
+                    // For now, we just reset the form
+                    currentOrder = {};
+                    quantityInputs.forEach(input => input.value = 0);
+                    customerForm.reset();
+                    updateTotal();
+                } else {
+                    alert('Please fill in all your details and select at least one item.');
+                }
+            });
+
+            // Animation on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('is-visible');
+                        }, index * 100); // Stagger the animation
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            menuItems.forEach(item => {
+                observer.observe(item);
+            });
+        });
     </script>
 </body>
 </html>
