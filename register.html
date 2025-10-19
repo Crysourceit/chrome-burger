@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Place Your Order - Chrome & Burger</title>
+    <title>Register - Chrome & Burger</title>
     <style>
         :root {
             --primary-color: #ff9800;
@@ -13,6 +13,9 @@
             --surface-color: #fff;
             --border-color: #ddd;
             --header-text-color: #fff;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
         }
 
         body.dark-mode {
@@ -33,12 +36,14 @@
             color: var(--text-color);
             transition: background 0.3s, color 0.3s;
         }
+
         .container {
             width: 90%;
             max-width: 1200px;
             margin: auto;
             overflow: hidden;
         }
+
         /* Header */
         header {
             background: var(--secondary-color);
@@ -50,31 +55,37 @@
             z-index: 1000;
             transition: background 0.3s;
         }
+
         header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
             text-decoration: none;
             color: var(--header-text-color);
         }
+
         nav ul {
             padding: 0;
             list-style: none;
             display: flex;
             align-items: center;
         }
+
         nav ul li {
             margin-left: 20px;
         }
+
         nav a {
             color: var(--header-text-color);
             text-decoration: none;
             font-weight: 500;
         }
+
         .order-now-btn {
             background: var(--primary-color);
             color: #fff;
@@ -83,24 +94,29 @@
             text-decoration: none;
             font-weight: bold;
         }
+
         .mobile-toggle {
             display: none;
             cursor: pointer;
         }
+
         /* Theme Switch */
         .theme-switch-wrapper {
             display: flex;
             align-items: center;
         }
+
         .theme-switch {
             display: inline-block;
             height: 24px;
             position: relative;
             width: 50px;
         }
+
         .theme-switch input {
             display:none;
         }
+
         .slider {
             background-color: #ccc;
             bottom: 0;
@@ -111,6 +127,7 @@
             top: 0;
             transition: .4s;
         }
+
         .knob {
             background-color: #fff;
             position: absolute;
@@ -124,126 +141,278 @@
             align-items: center;
             justify-content: center;
         }
+
         .sun-icon, .moon-icon {
             transition: opacity 0.3s;
         }
+
         .sun-icon svg,
         .moon-icon svg {
             stroke: var(--primary-color);
         }
+
         .sun-icon {
             opacity: 1;
         }
+
         .moon-icon {
             opacity: 0;
             position: absolute;
         }
+
         input:checked + .slider {
             background-color: var(--primary-color);
         }
+
         input:checked + .slider .knob {
             transform: translateX(26px);
         }
+
         input:checked + .slider .sun-icon {
             opacity: 0;
         }
+
         input:checked + .slider .moon-icon {
             opacity: 1;
         }
+
         .slider.round {
             border-radius: 34px;
         }
 
-        /* Order Form Section */
-        #order-form {
+        /* Registration Form Section */
+        #register {
             padding: 80px 0;
-            background: var(--surface-color);
+            min-height: calc(100vh - 200px);
         }
-        #order-form h2 {
+
+        #register h2 {
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 40px;
         }
-        .order-container {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 40px;
-        }
-        .order-items, .order-summary {
-            background: var(--background-color);
-            padding: 30px;
+
+        .register-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--surface-color);
+            padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        .order-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .order-item-details {
-            flex-grow: 1;
-        }
-        .order-item-details h4 {
-            margin: 0 0 5px 0;
-        }
-        .order-item-quantity input {
-            width: 50px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            padding: 5px;
-        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
+
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            background-color: var(--surface-color);
+            margin-bottom: 8px;
+            font-weight: 500;
             color: var(--text-color);
         }
-        .order-total {
-            text-align: right;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-top: 20px;
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--surface-color);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
-        .place-order-btn {
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            color: var(--text-color);
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .password-strength-bar.weak {
+            width: 33%;
+            background: var(--error-color);
+        }
+
+        .password-strength-bar.medium {
+            width: 66%;
+            background: var(--warning-color);
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background: var(--success-color);
+        }
+
+        .password-strength-text {
+            margin-top: 5px;
+            font-size: 12px;
+            color: var(--text-color);
+        }
+
+        /* Validation States */
+        .form-group input.valid {
+            border-color: var(--success-color);
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+
+        .form-group input.invalid {
+            border-color: var(--error-color);
+            background-color: rgba(244, 67, 54, 0.05);
+        }
+
+        .validation-message {
+            margin-top: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .validation-message.error {
+            color: var(--error-color);
+            display: block;
+        }
+
+        .validation-message.success {
+            color: var(--success-color);
+            display: block;
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            display: none;
+        }
+
+        .validation-icon.success {
+            color: var(--success-color);
+            display: block;
+        }
+
+        .validation-icon.error {
+            color: var(--error-color);
+            display: block;
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        /* Submit Button */
+        .submit-btn {
             background: var(--primary-color);
             color: #fff;
             padding: 15px 30px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1.1rem;
             font-weight: bold;
             width: 100%;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #e68900;
+        }
+
+        .submit-btn:disabled {
+            background: var(--border-color);
+            cursor: not-allowed;
+        }
+
+        /* Form Feedback */
+        .form-feedback {
             margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
         }
 
-        .back-to-menu {
-            display: inline-block;
-            background: transparent;
+        .form-feedback.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+            display: block;
+        }
+
+        .form-feedback.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            display: block;
+        }
+
+        /* Login Link */
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-color);
+        }
+
+        .login-link a {
             color: var(--primary-color);
-            padding: 10px 20px;
-            border: 2px solid var(--primary-color);
-            border-radius: 5px;
             text-decoration: none;
-            font-weight: bold;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+            font-weight: 500;
         }
 
-        .back-to-menu:hover {
-            background: var(--primary-color);
-            color: #fff;
+        .login-link a:hover {
+            text-decoration: underline;
         }
 
         /* Footer */
@@ -253,27 +422,32 @@
             padding: 40px 0;
             transition: background 0.3s;
         }
+
         .footer-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
         }
+
         .footer-logo {
             font-size: 1.5rem;
             font-weight: bold;
         }
+
         .footer-nav a {
             color: var(--header-text-color);
             text-decoration: none;
             margin-left: 20px;
         }
+
         .social-media a {
             color: var(--header-text-color);
             text-decoration: none;
             font-size: 1.5rem;
             margin-left: 15px;
         }
+
         .copyright {
             text-align: center;
             margin-top: 40px;
@@ -285,34 +459,44 @@
             header .container {
                 flex-wrap: wrap;
             }
+
             nav {
                 display: none;
                 width: 100%;
                 margin-top: 1rem;
             }
+
             nav.active {
                 display: block;
             }
+
             nav ul {
                 flex-direction: column;
             }
+
             nav ul li {
                 margin: 10px 0;
                 text-align: center;
             }
+
             .mobile-toggle {
                 display: block;
             }
-            .order-container {
-                grid-template-columns: 1fr;
+
+            .register-container {
+                margin: 0 20px;
+                padding: 30px 20px;
             }
+
             .footer-container {
                 flex-direction: column;
                 text-align: center;
             }
+
             .footer-nav, .social-media {
                 margin-top: 20px;
             }
+
             .footer-nav a, .social-media a {
                 margin: 0 10px;
             }
@@ -328,7 +512,6 @@
                     <li><a href="index.html#menu">Menu</a></li>
                     <li><a href="index.html#about">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
-                    <li><a href="register.html">Register</a></li>
                     <li><a href="order.html" class="order-now-btn">Order Now</a></li>
                     <li>
                         <div class="theme-switch-wrapper">
@@ -351,39 +534,72 @@
         </div>
     </header>
 
-    <section id="order-form">
+    <section id="register">
         <div class="container">
-            <a href="order.html" class="back-to-menu">← Back to Menu</a>
-            <h2>Place Your Order</h2>
-            <div class="order-container">
-                <div class="order-items">
-                    <h3>Your Order</h3>
-                    <div id="order-items-list">
-                        <!-- Items will be added here by JavaScript -->
+            <h2>Create Your Account</h2>
+            <div class="register-container">
+                <form id="registrationForm" novalidate>
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                        <span class="validation-icon"></span>
+                        <div class="validation-message"></div>
                     </div>
-                </div>
-                <div class="order-summary">
-                    <h3>Your Details</h3>
-                    <form id="customer-details-form">
-                        <div class="form-group">
-                            <label for="customer-name">Name</label>
-                            <input type="text" id="customer-name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customer-phone">Phone Number</label>
-                            <input type="tel" id="customer-phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customer-address">Address</label>
-                            <input type="text" id="customer-address" required>
-                        </div>
-                    </form>
-                    <h3>Order Summary</h3>
-                    <div class="order-total">
-                        Total: <span id="order-total-price">฿0</span>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                        <span class="validation-icon"></span>
+                        <div class="validation-message"></div>
                     </div>
-                    <button class="place-order-btn">Place Order</button>
-                </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                        <span class="validation-icon"></span>
+                        <div class="validation-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" name="password" required>
+                        <button type="button" class="password-toggle" id="togglePassword">👁️</button>
+                        <span class="validation-icon"></span>
+                        <div class="validation-message"></div>
+                        <div class="password-strength">
+                            <div class="password-strength-bar"></div>
+                        </div>
+                        <div class="password-strength-text"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                        <button type="button" class="password-toggle" id="toggleConfirmPassword">👁️</button>
+                        <span class="validation-icon"></span>
+                        <div class="validation-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea id="address" name="address" placeholder="Enter your full address"></textarea>
+                        <span class="validation-icon"></span>
+                        <div class="validation-message"></div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">I agree to the <a href="#" style="color: var(--primary-color);">Terms and Conditions</a> and <a href="#" style="color: var(--primary-color);">Privacy Policy</a></label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Create Account</button>
+
+                    <div class="form-feedback" id="formFeedback"></div>
+
+                    <div class="login-link">
+                        Already have an account? <a href="#">Login here</a>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
@@ -407,7 +623,9 @@
         </div>
     </footer>
 
+    <script src="js/validation.js"></script>
     <script>
+        // Mobile navigation
         const mobileToggle = document.querySelector('.mobile-toggle');
         const nav = document.querySelector('nav');
 
@@ -433,89 +651,6 @@
             document.body.classList.add('dark-mode');
             themeSwitch.checked = true;
         }
-
-        // Order form logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const menuItems = [
-                { id: '1', name: 'Chrome & Onion Rings', price: 120 },
-                { id: '2', name: 'Loaded Fries', price: 80 },
-                { id: '3', name: 'The All-American', price: 180 },
-                { id: '4', name: 'Cheeseburger', price: 150 },
-                { id: '5', name: 'The Baconator', price: 250 },
-                { id: '6', name: 'Aloha Burger', price: 200 },
-                { id: '7', name: 'Cali Dreamin\'', price: 220 },
-                { id: '8', name: 'The Shrimp Daddy', price: 200 },
-                { id: '9', name: 'Seasoned Fries', price: 50 },
-                { id: '10', name: 'Onion Rings', price: 80 },
-                { id: '11', name: 'Creamy Coleslaw', price: 40 },
-                { id: '12', name: 'Soft Drinks', price: 30 },
-                { id: '13', name: 'Bottled Water', price: 20 },
-                { id: '14', name: 'Milkshakes', price: 80 }
-            ];
-
-            const orderItemsList = document.getElementById('order-items-list');
-            const orderTotalPrice = document.getElementById('order-total-price');
-            const placeOrderBtn = document.querySelector('.place-order-btn');
-            const customerForm = document.getElementById('customer-details-form');
-
-            let currentOrder = {};
-
-            menuItems.forEach(item => {
-                const orderItemHTML = `
-                    <div class="order-item" data-item-id="${item.id}">
-                        <div class="order-item-details">
-                            <h4>${item.name}</h4>
-                            <p class="price">฿${item.price.toFixed(2)}</p>
-                        </div>
-                        <div class="order-item-quantity">
-                            <input type="number" value="0" min="0" class="quantity-input">
-                        </div>
-                    </div>
-                `;
-                orderItemsList.innerHTML += orderItemHTML;
-            });
-
-            const quantityInputs = document.querySelectorAll('.quantity-input');
-
-            quantityInputs.forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const itemId = e.target.closest('.order-item').dataset.itemId;
-                    const quantity = parseInt(e.target.value);
-                    const item = menuItems.find(i => i.id === itemId);
-                    const itemPrice = item.price;
-
-                    if (quantity > 0) {
-                        currentOrder[itemId] = { quantity, itemPrice, itemName: item.name };
-                    } else {
-                        delete currentOrder[itemId];
-                    }
-                    updateTotal();
-                });
-            });
-
-            function updateTotal() {
-                let total = 0;
-                for (const itemId in currentOrder) {
-                    const item = currentOrder[itemId];
-                    total += item.quantity * item.itemPrice;
-                }
-                orderTotalPrice.textContent = `฿${total.toFixed(2)}`;
-            }
-
-            placeOrderBtn.addEventListener('click', () => {
-                if (customerForm.checkValidity() && Object.keys(currentOrder).length > 0) {
-                    alert('Thank you for your order! We will contact you shortly to confirm.');
-                    // Here you would typically send the order to a server
-                    // For now, we just reset the form
-                    currentOrder = {};
-                    quantityInputs.forEach(input => input.value = 0);
-                    customerForm.reset();
-                    updateTotal();
-                } else {
-                    alert('Please fill in all your details and select at least one item.');
-                }
-            });
-        });
     </script>
 </body>
 </html>
