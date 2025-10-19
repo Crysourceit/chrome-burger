@@ -228,6 +228,93 @@
             margin-top: 20px;
         }
 
+        /* Validation Styles */
+        .form-group {
+            position: relative;
+        }
+
+        .form-group input {
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .form-group input.valid {
+            border-color: #4caf50;
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+
+        .form-group input.invalid {
+            border-color: #f44336;
+            background-color: rgba(244, 67, 54, 0.05);
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            display: none;
+        }
+
+        .validation-icon.success {
+            color: #4caf50;
+            display: block;
+        }
+
+        .validation-icon.error {
+            color: #f44336;
+            display: block;
+        }
+
+        .validation-message {
+            margin-top: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .validation-message.error {
+            color: #f44336;
+            display: block;
+        }
+
+        .validation-message.success {
+            color: #4caf50;
+            display: block;
+        }
+
+        .form-feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .form-feedback.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+            display: block;
+        }
+
+        .form-feedback.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            border: 1px solid #f44336;
+            display: block;
+        }
+
+        .place-order-btn:disabled {
+            background: var(--border-color);
+            cursor: not-allowed;
+        }
+
         .back-to-menu {
             display: inline-block;
             background: transparent;
@@ -364,20 +451,27 @@
                 </div>
                 <div class="order-summary">
                     <h3>Your Details</h3>
-                    <form id="customer-details-form">
+                    <form id="customer-details-form" novalidate>
                         <div class="form-group">
-                            <label for="customer-name">Name</label>
-                            <input type="text" id="customer-name" required>
+                            <label for="customer-name">Name *</label>
+                            <input type="text" id="customer-name" name="customer-name" required>
+                            <span class="validation-icon"></span>
+                            <div class="validation-message"></div>
                         </div>
                         <div class="form-group">
-                            <label for="customer-phone">Phone Number</label>
-                            <input type="tel" id="customer-phone" required>
+                            <label for="customer-phone">Phone Number *</label>
+                            <input type="tel" id="customer-phone" name="customer-phone" required>
+                            <span class="validation-icon"></span>
+                            <div class="validation-message"></div>
                         </div>
                         <div class="form-group">
-                            <label for="customer-address">Address</label>
-                            <input type="text" id="customer-address" required>
+                            <label for="customer-address">Address *</label>
+                            <input type="text" id="customer-address" name="customer-address" required>
+                            <span class="validation-icon"></span>
+                            <div class="validation-message"></div>
                         </div>
                     </form>
+                    <div class="form-feedback" id="orderFormFeedback"></div>
                     <h3>Order Summary</h3>
                     <div class="order-total">
                         Total: <span id="order-total-price">฿0</span>
@@ -407,6 +501,7 @@
         </div>
     </footer>
 
+    <script src="js/validation.js"></script>
     <script>
         const mobileToggle = document.querySelector('.mobile-toggle');
         const nav = document.querySelector('nav');
@@ -434,6 +529,90 @@
             themeSwitch.checked = true;
         }
 
+        // Order form validation logic
+        class OrderFormValidator {
+            constructor() {
+                this.validator = new FormValidator();
+                this.initializeOrderValidation();
+            }
+
+            initializeOrderValidation() {
+                const customerNameField = document.getElementById('customer-name');
+                const customerPhoneField = document.getElementById('customer-phone');
+                const customerAddressField = document.getElementById('customer-address');
+
+                // Add validation event listeners
+                if (customerNameField) {
+                    customerNameField.addEventListener('input', () => this.validateCustomerField('customer-name', 'fullName'));
+                    customerNameField.addEventListener('blur', () => this.validateCustomerField('customer-name', 'fullName'));
+                }
+
+                if (customerPhoneField) {
+                    customerPhoneField.addEventListener('input', () => this.validateCustomerField('customer-phone', 'phone'));
+                    customerPhoneField.addEventListener('blur', () => this.validateCustomerField('customer-phone', 'phone'));
+                }
+
+                if (customerAddressField) {
+                    customerAddressField.addEventListener('input', () => this.validateCustomerField('customer-address', 'address'));
+                    customerAddressField.addEventListener('blur', () => this.validateCustomerField('customer-address', 'address'));
+                }
+            }
+
+            validateCustomerField(fieldId, validationType) {
+                const field = document.getElementById(fieldId);
+                if (!field) return false;
+
+                const value = field.value.trim();
+                let isValid = false;
+                let message = '';
+
+                switch (validationType) {
+                    case 'fullName':
+                        isValid = this.validator.validateFullName(value);
+                        message = isValid ? this.validator.messages.fullName.success : this.validator.messages.fullName.error;
+                        break;
+                    case 'phone':
+                        isValid = this.validator.validatePhone(value);
+                        message = isValid ? this.validator.messages.phone.success : this.validator.messages.phone.error;
+                        break;
+                    case 'address':
+                        if (value === '') {
+                            isValid = false;
+                            message = 'Address is required';
+                        } else {
+                            isValid = this.validator.validateAddress(value);
+                            message = isValid ? this.validator.messages.address.success : this.validator.messages.address.error;
+                        }
+                        break;
+                }
+
+                this.validator.updateFieldUI(field, isValid, message);
+                return isValid;
+            }
+
+            validateAllCustomerFields() {
+                const nameValid = this.validateCustomerField('customer-name', 'fullName');
+                const phoneValid = this.validateCustomerField('customer-phone', 'phone');
+                const addressValid = this.validateCustomerField('customer-address', 'address');
+
+                return nameValid && phoneValid && addressValid;
+            }
+
+            showFeedback(message, type) {
+                const feedbackElement = document.getElementById('orderFormFeedback');
+                if (!feedbackElement) return;
+
+                feedbackElement.textContent = message;
+                feedbackElement.className = `form-feedback ${type}`;
+                feedbackElement.style.display = 'block';
+
+                // Hide feedback after 5 seconds
+                setTimeout(() => {
+                    feedbackElement.style.display = 'none';
+                }, 5000);
+            }
+        }
+
         // Order form logic
         document.addEventListener('DOMContentLoaded', () => {
             const menuItems = [
@@ -457,6 +636,9 @@
             const orderTotalPrice = document.getElementById('order-total-price');
             const placeOrderBtn = document.querySelector('.place-order-btn');
             const customerForm = document.getElementById('customer-details-form');
+
+            // Initialize order form validation
+            const orderValidator = new OrderFormValidator();
 
             let currentOrder = {};
 
@@ -503,16 +685,53 @@
             }
 
             placeOrderBtn.addEventListener('click', () => {
-                if (customerForm.checkValidity() && Object.keys(currentOrder).length > 0) {
-                    alert('Thank you for your order! We will contact you shortly to confirm.');
-                    // Here you would typically send the order to a server
-                    // For now, we just reset the form
-                    currentOrder = {};
-                    quantityInputs.forEach(input => input.value = 0);
-                    customerForm.reset();
-                    updateTotal();
+                // Validate customer details using regex validation
+                const isCustomerDetailsValid = orderValidator.validateAllCustomerFields();
+
+                if (isCustomerDetailsValid && Object.keys(currentOrder).length > 0) {
+                    // Simulate order processing
+                    placeOrderBtn.disabled = true;
+                    placeOrderBtn.textContent = 'Processing Order...';
+
+                    orderValidator.showFeedback('Processing your order...', 'info');
+
+                    setTimeout(() => {
+                        orderValidator.showFeedback('✓ Order placed successfully! We will contact you shortly to confirm.', 'success');
+                        placeOrderBtn.disabled = false;
+                        placeOrderBtn.textContent = 'Place Order';
+
+                        // Reset form after successful submission
+                        setTimeout(() => {
+                            currentOrder = {};
+                            quantityInputs.forEach(input => input.value = 0);
+                            customerForm.reset();
+                            updateTotal();
+
+                            // Clear validation states
+                            const fields = document.querySelectorAll('#customer-details-form input');
+                            fields.forEach(field => {
+                                field.classList.remove('valid', 'invalid');
+                                const formGroup = field.closest('.form-group');
+                                const validationIcon = formGroup.querySelector('.validation-icon');
+                                const validationMessage = formGroup.querySelector('.validation-message');
+
+                                if (validationIcon) {
+                                    validationIcon.className = 'validation-icon';
+                                    validationIcon.textContent = '';
+                                }
+                                if (validationMessage) {
+                                    validationMessage.className = 'validation-message';
+                                    validationMessage.textContent = '';
+                                }
+                            });
+                        }, 3000);
+                    }, 2000);
                 } else {
-                    alert('Please fill in all your details and select at least one item.');
+                    if (Object.keys(currentOrder).length === 0) {
+                        orderValidator.showFeedback('Please select at least one item to order.', 'error');
+                    } else {
+                        orderValidator.showFeedback('Please correct the errors in your details and try again.', 'error');
+                    }
                 }
             });
         });
