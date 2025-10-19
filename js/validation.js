@@ -116,6 +116,12 @@ class FormValidator {
         // Form submission
         form.addEventListener('submit', (e) => this.handleFormSubmit(e));
 
+        // Ripple effect on submit button
+        const submitButton = form.querySelector('.submit-btn');
+        if (submitButton) {
+            submitButton.addEventListener('click', (e) => this.createRipple(e));
+        }
+
         // Password visibility toggles
         this.setupPasswordToggles();
     }
@@ -369,29 +375,96 @@ class FormValidator {
         const submitButton = form.querySelector('.submit-btn');
 
         if (isFormValid) {
-            // Simulate form submission
-            submitButton.disabled = true;
-            submitButton.textContent = 'Creating Account...';
+            // Set button to loading state
+            this.setButtonState(submitButton, 'loading');
 
             // Show loading feedback
             this.showFeedback(feedbackElement, 'Creating your account...', 'info');
 
             // Simulate API call
             setTimeout(() => {
+                // Success state
+                this.setButtonState(submitButton, 'success', '✓ Success!');
                 this.showFeedback(feedbackElement, '✓ Account created successfully! Welcome to Chrome & Burger!', 'success');
-                submitButton.disabled = false;
-                submitButton.textContent = 'Create Account';
 
                 // Reset form after successful submission
                 setTimeout(() => {
                     form.reset();
                     this.clearValidationStates();
                     this.hideFeedback(feedbackElement);
+                    this.setButtonState(submitButton, 'default', 'Create Account');
                 }, 3000);
             }, 2000);
         } else {
+            // Error state
+            this.setButtonState(submitButton, 'error', 'Try Again');
             this.showFeedback(feedbackElement, 'Please correct the errors above and try again.', 'error');
+
+            // Reset button state after error animation
+            setTimeout(() => {
+                this.setButtonState(submitButton, 'default', 'Create Account');
+            }, 2000);
         }
+    }
+
+    /**
+     * Set button state with animations
+     */
+    setButtonState(button, state, text = '') {
+        // Remove all state classes
+        button.classList.remove('loading', 'success', 'error');
+
+        // Remove any existing ripple effects
+        const existingRipples = button.querySelectorAll('.ripple');
+        existingRipples.forEach(ripple => ripple.remove());
+
+        switch (state) {
+            case 'loading':
+                button.classList.add('loading');
+                button.disabled = true;
+                break;
+
+            case 'success':
+                button.classList.add('success');
+                button.disabled = false;
+                if (text) button.textContent = text;
+                break;
+
+            case 'error':
+                button.classList.add('error');
+                button.disabled = false;
+                if (text) button.textContent = text;
+                break;
+
+            default:
+                button.disabled = false;
+                button.textContent = text || 'Create Account';
+                break;
+        }
+    }
+
+    /**
+     * Create ripple effect on button click
+     */
+    createRipple(event) {
+        const button = event.currentTarget;
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple');
+
+        button.appendChild(ripple);
+
+        // Remove ripple after animation
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
     }
 
     /**
