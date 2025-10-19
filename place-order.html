@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Your Order - Chrome & Burger</title>
+    <style>
+        :root {
+            --primary-color: #ff9800;
+            --secondary-color: #333;
+            --text-color: #555;
+            --background-color: #fff;
+            --surface-color: #fff;
+            --border-color: #ddd;
+            --header-text-color: #fff;
+        }
+
+        body.dark-mode {
+            --secondary-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            --background-color: #121212;
+            --surface-color: #1e1e1e;
+            --border-color: #444;
+            --header-text-color: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: var(--background-color);
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            overflow: hidden;
+        }
+        /* Header */
+        header {
+            background: var(--secondary-color);
+            color: var(--header-text-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: background 0.3s;
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: var(--header-text-color);
+        }
+        nav ul {
+            padding: 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        nav a {
+            color: var(--header-text-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .order-now-btn {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .mobile-toggle {
+            display: none;
+            cursor: pointer;
+        }
+        /* Theme Switch */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 50px;
+        }
+        .theme-switch input {
+            display:none;
+        }
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+        }
+        .knob {
+            background-color: #fff;
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sun-icon, .moon-icon {
+            transition: opacity 0.3s;
+        }
+        .sun-icon svg,
+        .moon-icon svg {
+            stroke: var(--primary-color);
+        }
+        .sun-icon {
+            opacity: 1;
+        }
+        .moon-icon {
+            opacity: 0;
+            position: absolute;
+        }
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        input:checked + .slider .knob {
+            transform: translateX(26px);
+        }
+        input:checked + .slider .sun-icon {
+            opacity: 0;
+        }
+        input:checked + .slider .moon-icon {
+            opacity: 1;
+        }
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        /* Order Form Section */
+        #order-form {
+            padding: 80px 0;
+            background: var(--surface-color);
+        }
+        #order-form h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+        .order-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+        .order-items, .order-summary {
+            background: var(--background-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .order-item-details {
+            flex-grow: 1;
+        }
+        .order-item-details h4 {
+            margin: 0 0 5px 0;
+        }
+        .order-item-quantity input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 5px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--surface-color);
+            color: var(--text-color);
+        }
+        .order-total {
+            text-align: right;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .place-order-btn {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .back-to-menu {
+            display: inline-block;
+            background: transparent;
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-menu:hover {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-color);
+            color: var(--header-text-color);
+            padding: 40px 0;
+            transition: background 0.3s;
+        }
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .footer-nav a {
+            color: var(--header-text-color);
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .social-media a {
+            color: var(--header-text-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            margin-left: 15px;
+        }
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header .container {
+                flex-wrap: wrap;
+            }
+            nav {
+                display: none;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            nav.active {
+                display: block;
+            }
+            nav ul {
+                flex-direction: column;
+            }
+            nav ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .mobile-toggle {
+                display: block;
+            }
+            .order-container {
+                grid-template-columns: 1fr;
+            }
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-nav, .social-media {
+                margin-top: 20px;
+            }
+            .footer-nav a, .social-media a {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">Chrome & Burger</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html#menu">Menu</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="order.html" class="order-now-btn">Order Now</a></li>
+                    <li>
+                        <div class="theme-switch-wrapper">
+                            <label class="theme-switch" for="theme-checkbox">
+                                <input type="checkbox" id="theme-checkbox" />
+                                <div class="slider round">
+                                    <div class="knob">
+                                        <span class="sun-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span>
+                                        <span class="moon-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <div class="mobile-toggle">
+                <img src="assets/svg/mobileToggle.svg" alt="Menu">
+            </div>
+        </div>
+    </header>
+
+    <section id="order-form">
+        <div class="container">
+            <a href="order.html" class="back-to-menu">← Back to Menu</a>
+            <h2>Place Your Order</h2>
+            <div class="order-container">
+                <div class="order-items">
+                    <h3>Your Order</h3>
+                    <div id="order-items-list">
+                        <!-- Items will be added here by JavaScript -->
+                    </div>
+                </div>
+                <div class="order-summary">
+                    <h3>Your Details</h3>
+                    <form id="customer-details-form">
+                        <div class="form-group">
+                            <label for="customer-name">Name</label>
+                            <input type="text" id="customer-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-phone">Phone Number</label>
+                            <input type="tel" id="customer-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-address">Address</label>
+                            <input type="text" id="customer-address" required>
+                        </div>
+                    </form>
+                    <h3>Order Summary</h3>
+                    <div class="order-total">
+                        Total: <span id="order-total-price">฿0</span>
+                    </div>
+                    <button class="place-order-btn">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-logo">Chrome & Burger</div>
+            <div class="footer-nav">
+                <a href="index.html#menu">Menu</a>
+                <a href="index.html#about">About</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <div class="social-media">
+                <a href="#">FB</a>
+                <a href="#">IG</a>
+                <a href="#">TW</a>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Chrome & Burger. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const nav = document.querySelector('nav');
+
+        mobileToggle.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+
+        // Theme switcher logic
+        const themeSwitch = document.querySelector('#theme-checkbox');
+        themeSwitch.addEventListener('change', () => {
+            if (themeSwitch.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Apply saved theme on page load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeSwitch.checked = true;
+        }
+
+        // Order form logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuItems = [
+                { id: '1', name: 'Chrome & Onion Rings', price: 120 },
+                { id: '2', name: 'Loaded Fries', price: 80 },
+                { id: '3', name: 'The All-American', price: 180 },
+                { id: '4', name: 'Cheeseburger', price: 150 },
+                { id: '5', name: 'The Baconator', price: 250 },
+                { id: '6', name: 'Aloha Burger', price: 200 },
+                { id: '7', name: 'Cali Dreamin\'', price: 220 },
+                { id: '8', name: 'The Shrimp Daddy', price: 200 },
+                { id: '9', name: 'Seasoned Fries', price: 50 },
+                { id: '10', name: 'Onion Rings', price: 80 },
+                { id: '11', name: 'Creamy Coleslaw', price: 40 },
+                { id: '12', name: 'Soft Drinks', price: 30 },
+                { id: '13', name: 'Bottled Water', price: 20 },
+                { id: '14', name: 'Milkshakes', price: 80 }
+            ];
+
+            const orderItemsList = document.getElementById('order-items-list');
+            const orderTotalPrice = document.getElementById('order-total-price');
+            const placeOrderBtn = document.querySelector('.place-order-btn');
+            const customerForm = document.getElementById('customer-details-form');
+
+            let currentOrder = {};
+
+            menuItems.forEach(item => {
+                const orderItemHTML = `
+                    <div class="order-item" data-item-id="${item.id}">
+                        <div class="order-item-details">
+                            <h4>${item.name}</h4>
+                            <p class="price">฿${item.price.toFixed(2)}</p>
+                        </div>
+                        <div class="order-item-quantity">
+                            <input type="number" value="0" min="0" class="quantity-input">
+                        </div>
+                    </div>
+                `;
+                orderItemsList.innerHTML += orderItemHTML;
+            });
+
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+
+            quantityInputs.forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const itemId = e.target.closest('.order-item').dataset.itemId;
+                    const quantity = parseInt(e.target.value);
+                    const item = menuItems.find(i => i.id === itemId);
+                    const itemPrice = item.price;
+
+                    if (quantity > 0) {
+                        currentOrder[itemId] = { quantity, itemPrice, itemName: item.name };
+                    } else {
+                        delete currentOrder[itemId];
+                    }
+                    updateTotal();
+                });
+            });
+
+            function updateTotal() {
+                let total = 0;
+                for (const itemId in currentOrder) {
+                    const item = currentOrder[itemId];
+                    total += item.quantity * item.itemPrice;
+                }
+                orderTotalPrice.textContent = `฿${total.toFixed(2)}`;
+            }
+
+            placeOrderBtn.addEventListener('click', () => {
+                if (customerForm.checkValidity() && Object.keys(currentOrder).length > 0) {
+                    alert('Thank you for your order! We will contact you shortly to confirm.');
+                    // Here you would typically send the order to a server
+                    // For now, we just reset the form
+                    currentOrder = {};
+                    quantityInputs.forEach(input => input.value = 0);
+                    customerForm.reset();
+                    updateTotal();
+                } else {
+                    alert('Please fill in all your details and select at least one item.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

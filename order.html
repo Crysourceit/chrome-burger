@@ -372,7 +372,7 @@
                     <li><a href="index.html#menu">Menu</a></li>
                     <li><a href="index.html#about">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
-                    <li><a href="order.html" class="order-now-btn">Order Now</a></li>
+                    <li><a href="place-order.html" class="order-now-btn">Place Order</a></li>
                     <li>
                         <div class="theme-switch-wrapper">
                             <label class="theme-switch" for="theme-checkbox">
@@ -521,41 +521,17 @@
         </div>
     </section>
 
-    <section id="order-form">
+    <section id="order-cta">
         <div class="container">
-            <h2>Place Your Order</h2>
-            <div class="order-container">
-                <div class="order-items">
-                    <h3>Your Order</h3>
-                    <div id="order-items-list">
-                        <!-- Items will be added here by JavaScript -->
-                    </div>
-                </div>
-                <div class="order-summary">
-                    <h3>Your Details</h3>
-                    <form id="customer-details-form">
-                        <div class="form-group">
-                            <label for="customer-name">Name</label>
-                            <input type="text" id="customer-name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customer-phone">Phone Number</label>
-                            <input type="tel" id="customer-phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customer-address">Address</label>
-                            <input type="text" id="customer-address" required>
-                        </div>
-                    </form>
-                    <h3>Order Summary</h3>
-                    <div class="order-total">
-                        Total: <span id="order-total-price">฿0</span>
-                    </div>
-                    <button class="place-order-btn">Place Order</button>
-                </div>
+            <div style="text-align: center; padding: 40px 0;">
+                <h2 style="margin-bottom: 20px;">Ready to Place Your Order?</h2>
+                <p style="margin-bottom: 30px; font-size: 1.1rem;">Browse our menu above and click below to place your order!</p>
+                <a href="place-order.html" class="order-now-btn" style="padding: 15px 40px; font-size: 1.2rem;">Place Your Order</a>
             </div>
         </div>
     </section>
+
+
 
     <footer>
         <div class="container footer-container">
@@ -603,76 +579,10 @@
             themeSwitch.checked = true;
         }
 
-        // Order form logic
+        // Animation on scroll
         document.addEventListener('DOMContentLoaded', () => {
             const menuItems = document.querySelectorAll('.menu-item-card');
-            const orderItemsList = document.getElementById('order-items-list');
-            const orderTotalPrice = document.getElementById('order-total-price');
-            const placeOrderBtn = document.querySelector('.place-order-btn');
-            const customerForm = document.getElementById('customer-details-form');
 
-            let currentOrder = {};
-
-            menuItems.forEach(item => {
-                const itemId = item.dataset.itemId;
-                const itemName = item.dataset.itemName;
-                const itemPrice = parseFloat(item.dataset.itemPrice.replace(/[^0-9.-]+/g,""));
-
-                const orderItemHTML = `
-                    <div class="order-item" data-item-id="${itemId}">
-                        <div class="order-item-details">
-                            <h4>${itemName}</h4>
-                            <p class="price">฿${itemPrice.toFixed(2)}</p>
-                        </div>
-                        <div class="order-item-quantity">
-                            <input type="number" value="0" min="0" class="quantity-input">
-                        </div>
-                    </div>
-                `;
-                orderItemsList.innerHTML += orderItemHTML;
-            });
-
-            const quantityInputs = document.querySelectorAll('.quantity-input');
-
-            quantityInputs.forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const itemId = e.target.closest('.order-item').dataset.itemId;
-                    const quantity = parseInt(e.target.value);
-                    const itemPrice = parseFloat(document.querySelector(`.menu-item-card[data-item-id='${itemId}']`).dataset.itemPrice.replace(/[^0-9.-]+/g,""));
-
-                    if (quantity > 0) {
-                        currentOrder[itemId] = { quantity, itemPrice };
-                    } else {
-                        delete currentOrder[itemId];
-                    }
-                    updateTotal();
-                });
-            });
-
-            function updateTotal() {
-                let total = 0;
-                for (const itemId in currentOrder) {
-                    const item = currentOrder[itemId];
-                    total += item.quantity * item.itemPrice;
-                }
-                orderTotalPrice.textContent = `฿${total.toFixed(2)}`;
-            }
-
-            placeOrderBtn.addEventListener('click', () => {
-                if (customerForm.checkValidity() && Object.keys(currentOrder).length > 0) {
-                    alert('Thank you for your order! We will contact you shortly to confirm.');
-                    // Here you would typically send the order to a server
-                    // For now, we just reset the form
-                    currentOrder = {};
-                    quantityInputs.forEach(input => input.value = 0);
-                    customerForm.reset();
-                    updateTotal();
-                } else {
-                    alert('Please fill in all your details and select at least one item.');
-                }
-            });
-
-            // Animation on scroll
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry, index) => {
                     if (entry.isIntersecting) {
