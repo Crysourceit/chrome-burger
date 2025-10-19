@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order - Chrome & Burger</title>
+    <style>
+        :root {
+            --primary-color: #ff9800;
+            --secondary-color: #333;
+            --text-color: #555;
+            --background-color: #fff;
+            --surface-color: #fff;
+            --border-color: #ddd;
+            --header-text-color: #fff;
+        }
+
+        body.dark-mode {
+            --secondary-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            --background-color: #121212;
+            --surface-color: #1e1e1e;
+            --border-color: #444;
+            --header-text-color: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: var(--background-color);
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            overflow: hidden;
+        }
+        /* Header */
+        header {
+            background: var(--secondary-color);
+            color: var(--header-text-color);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: background 0.3s;
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: var(--header-text-color);
+        }
+        nav ul {
+            padding: 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        nav a {
+            color: var(--header-text-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .order-now-btn {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .mobile-toggle {
+            display: none;
+            cursor: pointer;
+        }
+        /* Theme Switch */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 50px;
+        }
+        .theme-switch input {
+            display:none;
+        }
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+        }
+        .knob {
+            background-color: #fff;
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .sun-icon, .moon-icon {
+            transition: opacity 0.3s;
+        }
+        .sun-icon svg,
+        .moon-icon svg {
+            stroke: var(--primary-color);
+        }
+        .sun-icon {
+            opacity: 1;
+        }
+        .moon-icon {
+            opacity: 0;
+            position: absolute;
+        }
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        input:checked + .slider .knob {
+            transform: translateX(26px);
+        }
+        input:checked + .slider .sun-icon {
+            opacity: 0;
+        }
+        input:checked + .slider .moon-icon {
+            opacity: 1;
+        }
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        /* Menu Section */
+        #order-menu {
+            padding: 80px 0;
+        }
+        #order-menu h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+        .menu-category {
+            margin-bottom: 40px;
+        }
+        .menu-category h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .menu-item-card {
+            background: var(--surface-color);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: background 0.3s;
+        }
+        .menu-item-card-content {
+            padding: 20px;
+        }
+        .menu-item-card-content h4 {
+            font-size: 1.5rem;
+            margin-top: 0;
+        }
+        .menu-item-card-content p {
+            font-size: 1rem;
+        }
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-color);
+            color: var(--header-text-color);
+            padding: 40px 0;
+            transition: background 0.3s;
+        }
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .footer-nav a {
+            color: var(--header-text-color);
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .social-media a {
+            color: var(--header-text-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            margin-left: 15px;
+        }
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header .container {
+                flex-wrap: wrap;
+            }
+            nav {
+                display: none;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            nav.active {
+                display: block;
+            }
+            nav ul {
+                flex-direction: column;
+            }
+            nav ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .mobile-toggle {
+                display: block;
+            }
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .footer-nav, .social-media {
+                margin-top: 20px;
+            }
+            .footer-nav a, .social-media a {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">Chrome & Burger</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html#menu">Menu</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="order.html" class="order-now-btn">Order Now</a></li>
+                    <li>
+                        <div class="theme-switch-wrapper">
+                            <label class="theme-switch" for="theme-checkbox">
+                                <input type="checkbox" id="theme-checkbox" />
+                                <div class="slider round">
+									<div class="knob">
+										<span class="sun-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span>
+										<span class="moon-icon"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
+									</div>
+                                </div>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <div class="mobile-toggle">
+                <img src="assets/svg/mobileToggle.svg" alt="Menu">
+            </div>
+        </div>
+    </header>
+
+    <section id="order-menu">
+        <div class="container">
+            <h2>Our Full Menu</h2>
+            <div class="menu-category">
+                <h3>Starters</h3>
+                <div class="menu-grid">
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Chrome & Onion Rings</h4>
+                            <p>Crispy perfection made with sweet Vidalia onions (serves 2)</p>
+                            <p class="price">฿120</p>
+                        </div>
+                    </div>
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Loaded Fries</h4>
+                            <p>Choose your weapon - Cheese, Bacon, Chili, or go all in with "The Works" (cheese, bacon, chili, jalapenos)</p>
+                            <p class="price">฿80 (single), ฿120 (double)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-category">
+                <h3>The Classics</h3>
+                <div class="menu-grid">
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>The All-American</h4>
+                            <p>A timeless masterpiece featuring a juicy all-beef patty, melted cheddar cheese, crisp lettuce, vine-ripened tomato, red onion, tangy pickles, and our signature "Chrome Sauce" on a toasted brioche bun</p>
+                            <p class="price">$180</p>
+                        </div>
+                    </div>
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Cheeseburger</h4>
+                            <p>Simplicity done right. A juicy all-beef patty with melted American cheese on a toasted brioche bun. Customize it with your favorite toppings (additional cost)</p>
+                            <p class="price">฿150</p>
+                        </div>
+                    </div>
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>The Baconator</h4>
+                            <p>For the truly burger-obsessed. A double stacked juicy all-beef patty extravaganza with crispy bacon, melted cheddar cheese, crisp lettuce, vine-ripened tomato, red onion, and tangy pickles, all on a toasted brioche bun</p>
+                            <p class="price">฿250</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-category">
+                <h3>Beachcomber Specials</h3>
+                <div class="menu-grid">
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Aloha Burger</h4>
+                            <p>Island vibes on a bun! This tropical treat features a juicy all-beef patty topped with grilled pineapple, melted Swiss cheese, crisp lettuce, tangy teriyaki sauce, and a creamy sriracha mayo on a toasted Hawaiian sweet roll</p>
+                            <p class="price">฿200</p>
+                        </div>
+                    </div>
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Cali Dreamin'</h4>
+                            <p>West coast vibes meet East coast deliciousness. A juicy all-beef patty topped with creamy avocado, melted pepper jack cheese, crisp lettuce, vine-ripened tomato, red onion, and a chipotle mayo on a toasted sesame seed bun</p>
+                            <p class="price">$220</p>
+                        </div>
+                    </div>
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>The Shrimp Daddy</h4>
+                            <p>Feeling like something from the sea? A succulent jumbo shrimp patty with lettuce, tomato, remoulade sauce, and pico de gallo on a toasted brioche bun</p>
+                            <p class="price">฿200</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-category">
+                <h3>Sides</h3>
+                <div class="menu-grid">
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Seasoned Fries</h4>
+                            <p>Crispy and golden, just the way they should be</p>
+                            <p class="price">$50</p>
+                        </div>
+                    </div>
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Onion Rings</h4>
+                            <p>These beauties are addictive</p>
+                            <p class="price">$80</p>
+                        </div>
+                    </div>
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Creamy Coleslaw</h4>
+                            <p>The perfect tangy counterpoint to your burger</p>
+                            <p class="price">฿40</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-category">
+                <h3>Drinks</h3>
+                <div class="menu-grid">
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Soft Drinks</h4>
+                            <p class="price">฿30</p>
+                        </div>
+                    </div>
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Bottled Water</h4>
+                            <p class="price">$20</p>
+                        </div>
+                    </div>
+                    <div class="menu-item-card">
+                        <div class="menu-item-card-content">
+                            <h4>Milkshakes</h4>
+                            <p>(Vanilla, Chocolate, Oreo)</p>
+                            <p class="price">฿80</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-logo">Chrome & Burger</div>
+            <div class="footer-nav">
+                <a href="index.html#menu">Menu</a>
+                <a href="index.html#about">About</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+            <div class="social-media">
+                <a href="#">FB</a>
+                <a href="#">IG</a>
+                <a href="#">TW</a>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Chrome & Burger. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const nav = document.querySelector('nav');
+
+        mobileToggle.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+
+        // Theme switcher logic
+        const themeSwitch = document.querySelector('#theme-checkbox');
+        themeSwitch.addEventListener('change', () => {
+            if (themeSwitch.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Apply saved theme on page load
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeSwitch.checked = true;
+        }
+    </script>
+</body>
+</html>
