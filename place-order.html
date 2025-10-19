@@ -13,6 +13,11 @@
             --surface-color: #fff;
             --border-color: #ddd;
             --header-text-color: #fff;
+            /* Register Button Variables */
+            --register-gradient-start: #4CAF50;
+            --register-gradient-end: #45a049;
+            --register-button-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            --register-button-hover-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
 
         body.dark-mode {
@@ -82,6 +87,39 @@
             border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
+        }
+
+        /* Register Button - Modern Design */
+        .register-btn {
+            background: linear-gradient(135deg, var(--register-gradient-start) 0%, var(--register-gradient-end) 100%);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--register-button-shadow);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--register-button-hover-shadow);
+            background: linear-gradient(135deg, var(--register-gradient-end) 0%, var(--register-gradient-start) 100%);
+        }
+
+        .register-btn:focus {
+            outline: none;
+            box-shadow: var(--register-button-hover-shadow), 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
+        .register-btn:active {
+            transform: translateY(0);
+            box-shadow: var(--register-button-shadow);
         }
         .mobile-toggle {
             display: none;
@@ -390,6 +428,14 @@
             .mobile-toggle {
                 display: block;
             }
+
+            /* Mobile adjustments for register button */
+            .register-btn {
+                display: inline-block;
+                padding: 12px 28px;
+                font-size: 0.9rem;
+            }
+        }
             .order-container {
                 grid-template-columns: 1fr;
             }
@@ -415,7 +461,7 @@
                     <li><a href="index.html#menu">Menu</a></li>
                     <li><a href="index.html#about">About</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
-                    <li><a href="register.html">Register</a></li>
+                    <li><a href="register.html" class="register-btn">Register</a></li>
                     <li><a href="order.html" class="order-now-btn">Order Now</a></li>
                     <li>
                         <div class="theme-switch-wrapper">
