@@ -20,26 +20,30 @@
 This document provides comprehensive guidelines for an AI assistant working on any software development project. It establishes safe, efficient, and well-documented workflows to ensure high-quality contributions.
 
 ### Key Responsibilities
--   Code development and implementation
--   Testing and quality assurance
--   Documentation and session retrospectives
--   Following safe and efficient development workflows
--   Maintaining project context and history
+
+- Code development and implementation
+- Testing and quality assurance
+- Documentation and session retrospectives
+- Following safe and efficient development workflows
+- Maintaining project context and history
 
 ### Quick Reference - Short Codes
+
 #### Context & Planning Workflow (Core Pattern)
--   `ccc` - Create context issue and compact the conversation.
--   `nnn` - Smart planning: Auto-runs `ccc` if no recent context → Create a detailed implementation plan.
--   `gogogo` - Execute the most recent plan issue step-by-step.
--   `lll` - List project status (issues, PRs, commits) ✅
+
+- `ccc` - Create context issue and compact the conversation.
+- `nnn` - Smart planning: Auto-runs `ccc` if no recent context → Create a detailed implementation plan.
+- `gogogo` - Execute the most recent plan issue step-by-step.
+- `lll` - List project status (issues, PRs, commits) ✅
 
 #### Project Management
--   `rrr` - Create a detailed session retrospective.
 
+- `rrr` - Create a detailed session retrospective.
 
 ## Quick Start Guide
 
 ### Prerequisites
+
 ```bash
 # Check required tools (customize for your project)
 node --version
@@ -50,6 +54,7 @@ tmux --version    # Terminal multiplexer
 ```
 
 ### Initial Setup
+
 ```bash
 # 1. Clone the repository
 git clone [repository-url]
@@ -68,77 +73,88 @@ cp .env.example .env
 ```
 
 ### First Task
+
 1.  Run `lll` to see the current project status.
 2.  Run `nnn` to analyze the latest issue and create a plan.
 3.  Use `gogogo` to implement the plan.
 
 ## Project Context
 
-*(This section should be filled out for each specific project)*
+_(This section should be filled out for each specific project)_
 
 ### Project Overview
+
 A brief, high-level description of the project's purpose and goals.
 
 ### Architecture
--   **Backend**: [Framework, Language, Database]
--   **Frontend**: [Framework, Language, Libraries]
--   **Infrastructure**: [Hosting, CI/CD, etc.]
--   **Key Libraries**: [List of major dependencies]
+
+- **Backend**: [Framework, Language, Database]
+- **Frontend**: [Framework, Language, Libraries]
+- **Infrastructure**: [Hosting, CI/CD, etc.]
+- **Key Libraries**: [List of major dependencies]
 
 ### Current Features
--   [Feature A]
--   [Feature B]
--   [Feature C]
+
+- [Feature A]
+- [Feature B]
+- [Feature C]
 
 ## 🔴 Critical Safety Rules
 
 ### Repository Usage
--   **NEVER create issues/PRs on upstream**
+
+- **NEVER create issues/PRs on upstream**
 
 ### Command Usage
--   **NEVER use `-f` or `--force` flags with any commands.**
--   Always use safe, non-destructive command options.
--   If a command requires confirmation, handle it appropriately without forcing.
+
+- **NEVER use `-f` or `--force` flags with any commands.**
+- Always use safe, non-destructive command options.
+- If a command requires confirmation, handle it appropriately without forcing.
 
 ### Git Operations
--   Never use `git push --force` or `git push -f`.
--   Never use `git checkout -f`.
--   Never use `git clean -f`.
--   Always use safe git operations that preserve history.
--   **⚠️ NEVER MERGE PULL REQUESTS WITHOUT EXPLICIT USER PERMISSION**
--   **Never use `gh pr merge` unless explicitly instructed by the user**
--   **Always wait for user review and approval before any merge**
+
+- Never use `git push --force` or `git push -f`.
+- Never use `git checkout -f`.
+- Never use `git clean -f`.
+- Always use safe git operations that preserve history.
+- **⚠️ NEVER MERGE PULL REQUESTS WITHOUT EXPLICIT USER PERMISSION**
+- **Never use `gh pr merge` unless explicitly instructed by the user**
+- **Always wait for user review and approval before any merge**
 
 ### File Operations
--   Never use `rm -rf` - use `rm -i` for interactive confirmation.
--   Always confirm before deleting files.
--   Use safe file operations that can be reversed.
+
+- Never use `rm -rf` - use `rm -i` for interactive confirmation.
+- Always confirm before deleting files.
+- Use safe file operations that can be reversed.
 
 ### Package Manager Operations
--   Never use `[package-manager] install --force`.
--   Never use `[package-manager] update` without specifying packages.
--   Always review lockfile changes before committing.
+
+- Never use `[package-manager] install --force`.
+- Never use `[package-manager] update` without specifying packages.
+- Always review lockfile changes before committing.
 
 ### General Safety Guidelines
--   Prioritize safety and reversibility in all operations.
--   Ask for confirmation when performing potentially destructive actions.
--   Explain the implications of commands before executing them.
--   Use verbose options to show what commands are doing.
+
+- Prioritize safety and reversibility in all operations.
+- Ask for confirmation when performing potentially destructive actions.
+- Explain the implications of commands before executing them.
+- Use verbose options to show what commands are doing.
 
 ## Development Environment
 
-
-
 ### Environment Variables
-*(This section should be customized for the project)*
+
+_(This section should be customized for the project)_
 
 #### Backend (.env)
+
 ```
 DATABASE_URL=
 API_KEY=
 ```
 
 #### Frontend (.env)
+
 ```
 NEXT_PUBLIC_API_URL=
 ```
@@ -150,18 +166,22 @@ NEXT_PUBLIC_API_URL=
 #### Automated Tests
 
 #### Manual Testing Checklist
+
 Before pushing any changes:
--   [ ] Run the build command successfully.
--   [ ] Verify there are no new build warnings or type errors.
--   [ ] Test all affected pages and features.
--   [ ] Check the browser console for errors.
--   [ ] Test for mobile responsiveness if applicable.
--   [ ] Verify all interactive features work as expected.
+
+- [ ] Run the build command successfully.
+- [ ] Verify there are no new build warnings or type errors.
+- [ ] Test all affected pages and features.
+- [ ] Check the browser console for errors.
+- [ ] Test for mobile responsiveness if applicable.
+- [ ] Verify all interactive features work as expected.
 
 ### GitHub Workflow
 
 #### Creating Issues
+
 When starting a new feature or bug fix:
+
 ```bash
 # 1. Update main branch
 git checkout main && git pull
@@ -190,6 +210,7 @@ EOF
 ```
 
 #### Standard Development Flow
+
 ```bash
 # 1. Create a branch from the issue
 git checkout -b feat/issue-number-description
@@ -225,7 +246,9 @@ gh pr create --title "Same as commit" --body "Fixes #issue_number"
 ## Context Management & Short Codes
 
 ### Why the Two-Issue Pattern?
+
 The `ccc` → `nnn` workflow uses a two-issue pattern:
+
 1.  **Context Issues** (`ccc`): Preserve session state and context.
 2.  **Task Issues** (`nnn`): Contain actual implementation plans.
 
@@ -234,6 +257,7 @@ This separation ensures a clear distinction between context dumps and actionable
 ### Core Short Codes
 
 #### `ccc` - Create Context & Compact
+
 **Purpose**: Save the current session state and context to forward to another task.
 
 1.  **Gather Information**: `git status --porcelain`, `git log --oneline -5`
@@ -241,6 +265,7 @@ This separation ensures a clear distinction between context dumps and actionable
 3.  **Compact Conversation**: `/compact`
 
 #### `nnn` - Next Task Planning (Analysis & Planning Only)
+
 **Purpose**: Create a comprehensive implementation plan based on gathered context. **NO CODING** - only research, analysis, and planning.
 
 1.  **Check for Recent Context**: If none exists, run `ccc` first.
@@ -250,9 +275,11 @@ This separation ensures a clear distinction between context dumps and actionable
 5.  **Provide Summary**: Briefly summarize the analysis and the issue number created.
 
 #### `lll` - List Project Status ✅
+
 When you see `lll`, execute relevant `gh` and `git` commands in parallel to get a full overview of the project's state, then provide a visual summary of open issues, recent PRs, and current focus.
 
 #### `rrr` - Retrospective
+
 **Purpose**: Document the session's activities, learnings, and outcomes.
 
 **⚠️ CRITICAL**: The AI Diary and Honest Feedback sections are MANDATORY. These provide essential context and continuous improvement insights. Never skip these sections.
@@ -266,12 +293,13 @@ When you see `lll`, execute relevant `gh` and `git` commands in parallel to get 
 5.  **Link to GitHub**: Commit the retrospective and comment on the relevant issue/PR.
 
 **Time Zone Note**:
--   **PRIMARY TIME ZONE: [Your Time Zone]** - Always show the primary time zone first.
--   UTC time can be included for reference (e.g., in parentheses).
--   Filenames may use UTC for technical consistency.
 
+- **PRIMARY TIME ZONE: [Your Time Zone]** - Always show the primary time zone first.
+- UTC time can be included for reference (e.g., in parentheses).
+- Filenames may use UTC for technical consistency.
 
 **Step 3: Create Retrospective Document**
+
 ```bash
 # Get session date and times
 SESSION_DATE=$(date +"%Y-%m-%d")
@@ -308,7 +336,9 @@ cat > retrospectives/$(date +%Y/%m)/${SESSION_DATE}_${END_TIME_UTC//:/-}_retrosp
 
 ### Files Modified
 ```
+
 [paste git diff --name-only output]
+
 ```
 
 ### Key Code Changes
@@ -383,11 +413,13 @@ EOF
 ```
 
 **Step 4: Update CLAUDE.md**
+
 - Copy any new lessons learned to the Lessons Learned section
 - Add any new patterns or anti-patterns discovered
 - Update user preferences if any were observed
 
 **Step 5: Link to GitHub**
+
 ```bash
 # Add retrospective to git
 git add retrospectives/
@@ -399,12 +431,14 @@ gh issue comment XXX --body "Session retrospective created: ${RETRO_PATH}"
 ```
 
 **Time Zone Note**:
+
 - **PRIMARY TIME ZONE: GMT+7 (Bangkok time)** - Always show GMT+7 time first
 - UTC time included for reference only (shown in parentheses)
 - File names may use UTC for technical consistency
 - In all displays and retrospectives, prioritize GMT+7 for user clarity
 
 #### `gogogo` - Execute Planned Implementation
+
 1.  **Find Implementation Issue**: Locate the most recent `plan:` issue.
 2.  **Execute Implementation**: Follow the plan step-by-step, making all necessary code changes.
 3.  **Test & Verify**: Run all relevant tests and verify the implementation works.
@@ -412,11 +446,12 @@ gh issue comment XXX --body "Session retrospective created: ${RETRO_PATH}"
 
 ## Technical Reference
 
-*(This section should be filled out for each specific project)*
+_(This section should be filled out for each specific project)_
 
 ### Available Tools
 
 #### Version Control
+
 ```bash
 # Git operations (safe only)
 git status
@@ -430,6 +465,7 @@ gh pr create
 ```
 
 #### Search and Analysis
+
 ```bash
 # Ripgrep (preferred over grep)
 rg "pattern" --type [file-extension]
@@ -441,12 +477,14 @@ fd "[pattern]"
 ## Development Practices
 
 ### Code Standards
--   Follow the established style guide for the language/framework.
--   Enable strict mode and linting where possible.
--   Write clear, self-documenting code and add comments where necessary.
--   Avoid `any` or other weak types in strongly-typed languages.
+
+- Follow the established style guide for the language/framework.
+- Enable strict mode and linting where possible.
+- Write clear, self-documenting code and add comments where necessary.
+- Avoid `any` or other weak types in strongly-typed languages.
 
 ### Git Commit Format
+
 ```
 [type]: [brief description]
 
@@ -456,60 +494,67 @@ fd "[pattern]"
 
 Closes #[issue-number]
 ```
+
 **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 ### Error Handling Patterns
--   Use `try/catch` blocks for operations that might fail.
--   Provide descriptive error messages.
--   Implement graceful fallbacks in the UI.
--   Use custom error types where appropriate.
+
+- Use `try/catch` blocks for operations that might fail.
+- Provide descriptive error messages.
+- Implement graceful fallbacks in the UI.
+- Use custom error types where appropriate.
 
 ## Lessons Learned
 
-*(This section should be continuously updated with project-specific findings)*
-
+_(This section should be continuously updated with project-specific findings)_
 
 ### Planning & Architecture Patterns (2025-08-26)
--   **Pattern**: Use parallel agents for analyzing different aspects of complex systems
--   **Anti-Pattern**: Creating monolithic plans that try to implement everything at once
--   **Pattern**: Ask "what's the minimum viable first step?" before comprehensive implementation
--   **Pattern**: 1-hour implementation chunks are optimal for maintaining focus and seeing progress
+
+- **Pattern**: Use parallel agents for analyzing different aspects of complex systems
+- **Anti-Pattern**: Creating monolithic plans that try to implement everything at once
+- **Pattern**: Ask "what's the minimum viable first step?" before comprehensive implementation
+- **Pattern**: 1-hour implementation chunks are optimal for maintaining focus and seeing progress
 
 ### Common Mistakes to Avoid
--   **Creating overly comprehensive initial plans** - Break complex projects into 1-hour phases instead
--   **Trying to implement everything at once** - Start with minimum viable implementation, test, then expand
--   **Skipping AI Diary and Honest Feedback in retrospectives** - These sections provide crucial context and self-reflection that technical documentation alone cannot capture
--   *Example: Forgetting to update a lockfile after changing dependencies.*
--   *Example: Not checking build logs for warnings that could become errors.*
--   *Example: Making assumptions about API responses instead of checking the spec.*
+
+- **Creating overly comprehensive initial plans** - Break complex projects into 1-hour phases instead
+- **Trying to implement everything at once** - Start with minimum viable implementation, test, then expand
+- **Skipping AI Diary and Honest Feedback in retrospectives** - These sections provide crucial context and self-reflection that technical documentation alone cannot capture
+- _Example: Forgetting to update a lockfile after changing dependencies._
+- _Example: Not checking build logs for warnings that could become errors._
+- _Example: Making assumptions about API responses instead of checking the spec._
 
 ### Useful Tricks Discovered
--   **Parallel agents for analysis** - Using multiple agents to analyze different aspects speeds up planning significantly
--   **ccc → nnn workflow** - Context capture followed by focused planning creates better structured issues
--   **Phase markers in issues** - Using "Phase 1:", "Phase 2:" helps track incremental progress
--   *Example: Using a specific library feature to simplify complex state.*
--   *Example: A shell command alias that speeds up a common task.*
--   *Example: A design pattern that solved a recurring problem in the codebase.*
+
+- **Parallel agents for analysis** - Using multiple agents to analyze different aspects speeds up planning significantly
+- **ccc → nnn workflow** - Context capture followed by focused planning creates better structured issues
+- **Phase markers in issues** - Using "Phase 1:", "Phase 2:" helps track incremental progress
+- _Example: Using a specific library feature to simplify complex state._
+- _Example: A shell command alias that speeds up a common task._
+- _Example: A design pattern that solved a recurring problem in the codebase._
 
 ### Project-Specific Patterns
--   *Example: The standard way we handle authentication state.*
--   *Example: The required structure for a new API endpoint.*
--   *Example: The component composition pattern used for UI elements.*
+
+- _Example: The standard way we handle authentication state._
+- _Example: The required structure for a new API endpoint._
+- _Example: The component composition pattern used for UI elements._
 
 ### User Preferences (Observed)
--   **Prefers manageable scope** - "i love this - Can be completed in under 1 hour" shows preference for achievable tasks
--   **Values phased approaches** - Recognizes when plans are "too huge" and appreciates splitting work
--   **Appreciates workflow patterns** - Likes using established patterns like "ccc nnn gh flow"
--   *Example: Prefers simple, direct solutions over complex abstractions.*
--   *Example: Values quick iteration and seeing visual progress.*
--   *Example: Appreciates clear, actionable feedback and well-defined tasks.*
--   **Time zone preference: GMT+7 (Bangkok/Asia)**
+
+- **Prefers manageable scope** - "i love this - Can be completed in under 1 hour" shows preference for achievable tasks
+- **Values phased approaches** - Recognizes when plans are "too huge" and appreciates splitting work
+- **Appreciates workflow patterns** - Likes using established patterns like "ccc nnn gh flow"
+- _Example: Prefers simple, direct solutions over complex abstractions._
+- _Example: Values quick iteration and seeing visual progress._
+- _Example: Appreciates clear, actionable feedback and well-defined tasks._
+- **Time zone preference: GMT+7 (Bangkok/Asia)**
 
 ## Troubleshooting
 
 ### Common Issues
 
 #### Build Failures
+
 ```bash
 # Check for type errors or syntax issues
 [build-command] 2>&1 | grep -A 5 "error"
@@ -520,6 +565,7 @@ rm -rf node_modules .cache dist build
 ```
 
 #### Port Conflicts
+
 ```bash
 # Find the process using a specific port
 lsof -i :[port-number]
@@ -531,10 +577,13 @@ kill -9 [PID]
 ## Appendices
 
 ### A. Glossary
-*(Add project-specific terms here)*
--   **Term**: Definition.
+
+_(Add project-specific terms here)_
+
+- **Term**: Definition.
 
 ### B. Quick Command Reference
+
 ```bash
 # Development
 [run-command]          # Start dev server
@@ -548,12 +597,13 @@ Ctrl+b, d              # Detach from session
 ```
 
 ### C. Environment Checklist
--   [ ] Correct version of [Language/Runtime] installed
--   [ ] [Package Manager] installed
--   [ ] GitHub CLI configured
--   [ ] Tmux installed
--   [ ] Environment variables set
--   [ ] Git configured
+
+- [ ] Correct version of [Language/Runtime] installed
+- [ ] [Package Manager] installed
+- [ ] GitHub CLI configured
+- [ ] Tmux installed
+- [ ] Environment variables set
+- [ ] Git configured
 
 **Last Updated**: [Date]
 **Version**: 1.0.0
